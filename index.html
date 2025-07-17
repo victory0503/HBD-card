@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สุขสันต์วันเกิด!</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* กำหนดฟอนต์ Inter ทั่วทั้งหน้า */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* กำหนดพื้นหลังและจัดองค์ประกอบให้อยู่ตรงกลาง */
+        .birthday-container {
+            background: linear-gradient(to bottom right, #fecaca, #fbcfe8); /* ไล่สีชมพูอ่อนๆ */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem; /* เพิ่ม padding สำหรับหน้าจอมือถือ */
+        }
+        /* สไตล์การ์ด */
+        .birthday-card {
+            background-color: #ffffff;
+            border-radius: 1.5rem; /* มุมโค้งมน */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* เงา */
+            padding: 2.5rem; /* padding ภายใน */
+            text-align: center;
+            max-width: 90%; /* จำกัดความกว้างสูงสุด */
+            width: 500px; /* ความกว้างที่แนะนำ */
+            animation: fadeInScale 1s ease-out forwards; /* แอนิเมชันเมื่อโหลด */
+            position: relative; /* สำหรับองค์ประกอบตกแต่ง */
+            overflow: hidden; /* ซ่อนส่วนเกินขององค์ประกอบตกแต่ง */
+        }
+
+        /* แอนิเมชันการปรากฏ */
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* แอนิเมชันสำหรับลูกโป่งและพลุ */
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; }
+        }
+
+        @keyframes explode {
+            0% { transform: scale(0); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+
+        .balloon {
+            position: absolute;
+            width: 30px;
+            height: 40px;
+            background-color: #ff69b4; /* สีชมพูร้อน */
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            bottom: -50px;
+            animation: floatUp 10s ease-in-out infinite;
+            opacity: 0;
+        }
+        .balloon:nth-child(2) { background-color: #87ceeb; left: 10%; animation-delay: 1s; } /* สีฟ้าอ่อน */
+        .balloon:nth-child(3) { background-color: #ffd700; right: 15%; animation-delay: 2s; } /* สีทอง */
+        .balloon:nth-child(4) { background-color: #98fb98; left: 25%; animation-delay: 3s; } /* สีเขียวอ่อน */
+        .balloon:nth-child(5) { background-color: #da70d6; right: 5%; animation-delay: 4s; } /* สีม่วงอ่อน */
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f0f8ff; /* สีขาวอมฟ้า */
+            opacity: 0;
+            animation: explode 0.8s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <div class="birthday-container">
+        <div class="birthday-card">
+            <!-- องค์ประกอบตกแต่ง - ลูกโป่ง -->
+            <div class="balloon" style="left: 5%;"></div>
+            <div class="balloon" style="left: 15%;"></div>
+            <div class="balloon" style="right: 10%;"></div>
+            <div class="balloon" style="right: 20%;"></div>
+            <div class="balloon" style="left: 30%;"></div>
+
+            <h1 class="text-4xl md:text-5xl font-bold text-pink-600 mb-4 animate-bounce">
+                สุขสันต์วันเกิด!
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-700 mb-6">
+                ขอให้มีความสุขมากๆ ในวันพิเศษนี้!
+            </p>
+            <p class="text-lg md:text-xl text-gray-600 mb-8">
+                ขอให้วันนี้เต็มไปด้วยความสุข รอยยิ้ม และความทรงจำดีๆ นะ!
+            </p>
+            <div class="text-2xl md:text-3xl text-purple-500 font-semibold">
+                🎂🎉🎁
+            </div>
+
+            <!-- องค์ประกอบตกแต่ง - พลุ (จะถูกสร้างด้วย JS) -->
+            <div id="confetti-container" class="absolute inset-0 pointer-events-none"></div>
+        </div>
+    </div>
+
+    <script>
+        // ฟังก์ชันสำหรับสร้างพลุ
+        function createConfetti() {
+            const confettiContainer = document.getElementById('confetti-container');
+            const colors = ['#ff69b4', '#87ceeb', '#ffd700', '#98fb98', '#da70d6', '#ff4500']; // เพิ่มสี
+            for (let i = 0; i < 50; i++) { // สร้างพลุ 50 ชิ้น
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.top = `${Math.random() * 100}%`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]; // สุ่มสี
+                confetti.style.animationDelay = `${Math.random() * 0.5}s`; // ดีเลย์การเกิด
+                confettiContainer.appendChild(confetti);
+            }
+        }
+
+        // เรียกใช้ฟังก์ชันสร้างพลุเมื่อหน้าเว็บโหลดเสร็จ
+        window.onload = createConfetti;
+    </script>
+</body>
+</html>
